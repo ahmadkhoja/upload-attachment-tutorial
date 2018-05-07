@@ -1,0 +1,111 @@
+import App from './App';
+import React from 'react';
+import { StaticRouter } from 'react-router-dom';
+import express from 'express';
+import { renderToString } from 'react-dom/server';
+import multer from 'multer'
+import bodyParser from 'body-parser'
+import Home from './Home' 
+// import SocketIo from 'socket.io'
+const images_array = ['faraya.jpg']
+
+const server = express();
+
+const multerConfig = multer({
+  //specify diskStorage (another option is memory)
+  storage: multer.diskStorage({
+    //specify destination
+    destination: function(req, file, next){
+      next(null, './public/images');
+    },
+    //specify the filename to be unique
+    filename: function(req, file, next){
+      // console.log(file);
+      //get the file mimetype ie 'image/jpeg' split and prefer the second value ie'jpeg'
+      const ext = file.mimetype.split('/')[1];
+      //set the file fieldname to a unique name containing the original name, current datetime and the extension.
+      next(null, file.originalname /*+ '-' + Date.now() + '.'+ext*/);
+      const image = file.originalname
+      // const imageObj = {image}
+      // images_array.push(imageObj)
+      // const image_path = '/images/'+ image
+      images_array.push(image)
+      console.log(images_array)
+    }
+  }),
+  // filter out and prevent non-image files.
+  fileFilter: function(req, file, next){
+        if(!file){
+          next();
+        }
+      // only permit image mimetypes
+      const image = file.mimetype.startsWith('image/');
+      if(image){
+        // console.log('photo uploaded');
+        next(null, true);
+      }else{
+        // console.log("file not supported")
+        //TODO:  A better message response to user on failure.
+        return next();
+      }
+  }
+}).single('photo')
+const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
+server
+  .disable('x-powered-by')
+  .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
+  //MULTER CONFIG: [object File],to get file photos to temp server storage
+  // .get('/', (req, res) => res.send({images:images_array}))
+  .get('/images', (req, res) => res.send({images:images_array}))
+  .post('/upload', multerConfig, (req, res) => {
+      // res.write('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>')
+      // res.set({
+      //   'Content-Type': 'application/json',
+      // })
+      // res.writeHead(200, 
+      //   {
+      //   'Content-Type': 'application/json' 
+      //   });
+      // res.send({images:images_array})
+      res.redirect('/')
+      // res.redirect(200, '/');      
+      // res.redirect('http://localhost:3000')
+      // res.send('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>'+{images:images_array});
+  })
+  .use(bodyParser.urlencoded({extended:false}))
+  .use(bodyParser.json())
+  .use('/', express.static(__dirname + '/public'))
+  .get('/*', (req, res) => {
+    const context = {};
+    const markup = renderToString(
+      <StaticRouter context={context} location={req.url}>
+        <App />
+      </StaticRouter>
+    );
+    if (context.url) {
+      res.redirect(context.url);
+    } else {
+      res.status(200).send(
+        `<!doctype html>
+    <html lang="">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta charset="utf-8" />
+        <title>Welcome to Razzle</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        ${assets.client.css
+          ? `<link rel="stylesheet" href="${assets.client.css}">`
+          : ''}
+        ${process.env.NODE_ENV === 'production'
+          ? `<script src="${assets.client.js}" defer></script>`
+          : `<script src="${assets.client.js}" defer crossorigin></script>`}
+    </head>
+    <body>
+        <div id="root">${markup}</div>
+    </body>
+</html>`
+      );
+    }
+  });
+
+export default server;
