@@ -7,16 +7,18 @@ import fetch from 'node-fetch';
 
  const UploadedImage = ({image}) => {
     return (
-      <div>
+      <p>
         <img src={image} width="100px" height="100px" alt="batata"/> <br/>
-      </div>
+      </p>
     )
 }
 export class UploadedImages extends React.Component{
   constructor(){
     super()
     this.state = {
-      images:[], 
+      images:[
+        {name:'amr.png'},
+      ], 
       // loading_progress:'loading',
       message:'error',
       imagename:''
@@ -27,24 +29,29 @@ export class UploadedImages extends React.Component{
   }
   loadImages = () => {
     // this.setState({loading_progress:'loading'})
-    fetch('/upload')
-      .then(response=>response.json())
-      .then(response=>this.setState({images:response.images,/*loading_progress:'success'*/}))
-      .catch(err => this.setState({/*loading_progress:'error',*/ message:err.message}))
-    console.log(this.state.images,'yes from here you bakka')
+    // const images_list = this.state.images.slice()
+      fetch('/upload')
+      // .then(response=>response.json())
+      .then(response=> console.log('response.images',response.body)
+        
+      )
+      // .then(response=>images_list.push(response.images))
+      // .then(response=>this.setState({images:response.images,/*loading_progress:'success'*/}))
+      // .then(console.log(this.state.images,'yes from here you bakka'))
+        // .catch(err => this.setState({/*loading_progress:'error',*/ message:err.message}))  
   }
   onChange = (event) => {
     let imagename = event.target.files[0].name;
     console.log(imagename);
     this.setState({imagename})
   }
-  uploadImage = (event) => {
-    // event.preventDefault()
-    // get the form data
-    fetch('/upload')
-      .then( () => this.loadImages())
-      .catch(err => this.setState({ /*loading_progress: 'error',*/ message:err.message}))
-  }
+  // uploadImage = (event) => {
+  //   // event.preventDefault()
+  //   // get the form data
+  //   fetch('/upload')
+  //     .then( () => this.loadImages())
+  //     // .catch(err => this.setState({ /*loading_progress: 'error',*/ message:err.message}))
+  // }
   render(){
   //   const { loading_progress } = this.state
   //   if(loading_progress === 'loading'){
@@ -53,10 +60,12 @@ export class UploadedImages extends React.Component{
   //  else if(loading_progress === 'error'){
   //     return <div>{this.state.message}</div>
   //  }
+  // console.log(this.state.images)
+  // {this.loadImages}
   return(
       <div className="uploadForm">
         <h1>Upload a photo!</h1> 
-        <form onSubmit={this.uploadImage} action="/upload" encType="multipart/form-data" method="POST" >
+        <form /*onSubmit={this.loadImages}*/ action="/upload" encType="multipart/form-data" method="POST" >
               <div className="section">Note: Only image files are allowed.</div>
               <div className="inner-wrap">
                 <label><input type="file" id="photo" name="photo" onChange={this.onChange}/></label>
@@ -65,7 +74,9 @@ export class UploadedImages extends React.Component{
                 </div>
               </div>
         </form>
-        {this.state.images.map( (image)=> <UploadedImage image={'/images/'+image.name} key={image.name}/>)}
+        {(this.state.images ? 
+   <div>{this.state.images.map( (image)=> <UploadedImage image={'/images/'+image.name} key={image.name}/>)}</div>
+        :null )}
      </div>
   ) 
   }

@@ -7,7 +7,7 @@ import multer from 'multer'
 import bodyParser from 'body-parser'
 import Home from './Home' 
 // import SocketIo from 'socket.io'
-const images_array = ['faraya.jpg']
+const images_array = [{name:'faraya.jpg'}]
 
 const server = express();
 
@@ -26,10 +26,12 @@ const multerConfig = multer({
       //set the file fieldname to a unique name containing the original name, current datetime and the extension.
       next(null, file.originalname /*+ '-' + Date.now() + '.'+ext*/);
       const image = file.originalname
+      const imageObj = {name:image}
+      console.log(imageObj)
       // const imageObj = {image}
       // images_array.push(imageObj)
       // const image_path = '/images/'+ image
-      images_array.push(image)
+      images_array.push(imageObj)
       console.log(images_array)
     }
   }),
@@ -59,6 +61,7 @@ server
   .get('/images', (req, res) => res.send({images:images_array}))
   .post('/upload', multerConfig, (req, res) => {
       // res.write('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>')
+      res.send(images_array)
       // res.set({
       //   'Content-Type': 'application/json',
       // })
@@ -66,8 +69,10 @@ server
       //   {
       //   'Content-Type': 'application/json' 
       //   });
-      // res.send({images:images_array})
-      res.redirect('/')
+      // res.json([{
+      //   "images": images_array,
+      // }]);
+      // res.redirect('/')
       // res.redirect(200, '/');      
       // res.redirect('http://localhost:3000')
       // res.send('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>'+{images:images_array});
