@@ -1,14 +1,14 @@
 import React from 'react';
-import logo from './react.svg';
 import './Home.css';
-import Main from './Main'
-import FileField from './FileField'
-
+import fetch from 'node-fetch';
+// import logo from './react.svg';
+// import FileField from './FileField'
+// import Main from './Main'
 
  const UploadedImage = ({image}) => {
     return (
       <div>
-        <img src={image} width="100px" height="100px"/> <br/>
+        <img src={image} width="100px" height="100px" alt="batata"/> <br/>
       </div>
     )
 }
@@ -56,11 +56,11 @@ export class UploadedImages extends React.Component{
   return(
       <div className="uploadForm">
         <h1>Upload a photo!</h1> 
-        <form onSubmit={this.uploadImage} action="/upload" enctype="multipart/form-data" method="POST" >
-              <div class="section">Note: Only image files are allowed.</div>
-              <div class="inner-wrap">
+        <form onSubmit={this.uploadImage} action="/upload" encType="multipart/form-data" method="POST" >
+              <div className="section">Note: Only image files are allowed.</div>
+              <div className="inner-wrap">
                 <label><input type="file" id="photo" name="photo" onChange={this.onChange}/></label>
-                <div class="button-section">
+                <div className="button-section">
                   <input type="submit" name="Upload" value="Upload Photo"/>
                 </div>
               </div>
@@ -97,10 +97,10 @@ class Home extends React.Component {
       <div className="Home">
         <h1>Upload a photo!</h1> 
           <form /*onSubmit={this.onFormSubmit}*/ action="/upload" enctype="multipart/form-data" method="POST" >
-                <div class="section">Note: Only image files are allowed.</div>
-                <div class="inner-wrap">
+                <div className="section">Note: Only image files are allowed.</div>
+                <div className="inner-wrap">
                   <label><input type="file" id="photo" name="photo" onChange={this.uploadFile} /></label>
-                  <div class="button-section">
+                  <div className="button-section">
                     <input type="submit" name="Upload" value="Upload Photo"/>
                   </div>
                 </div>
