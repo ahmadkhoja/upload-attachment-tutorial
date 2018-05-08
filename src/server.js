@@ -5,7 +5,7 @@ import express from 'express';
 import { renderToString } from 'react-dom/server';
 import multer from 'multer'
 import bodyParser from 'body-parser'
-import Home from './Home' 
+
 const images_array = []
 const server = express();
 const multerConfig = multer({

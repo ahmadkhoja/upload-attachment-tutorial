@@ -14,8 +14,7 @@ export default class UploadedImages extends React.Component{
     this.state = {
       images:[], 
       // loading_progress:'loading',
-      message:'error',
-      imagename:''
+      message:'error'
     }
   }
   componentDidMount(){
@@ -28,11 +27,6 @@ export default class UploadedImages extends React.Component{
       .then(response=>this.setState({images:response.images,/*loading_progress:'success'*/}))
       // .catch(err => this.setState({/*loading_progress:'error',*/ message:err.message}))  
   }
-  onChange = (event) => {
-    let imagename = event.target.files[0].name;
-    console.log(imagename);
-    this.setState({imagename})
-  }
   render(){
     return(
         <div className="uploadForm">
@@ -40,7 +34,7 @@ export default class UploadedImages extends React.Component{
           <form action="/upload" encType="multipart/form-data" method="POST" >
                 <div className="section">Note: Only image files are allowed.</div>
                 <div className="inner-wrap">
-                  <label><input type="file" id="photo" name="photo" onChange={this.onChange}/></label>
+                  <label><input type="file" id="photo" name="photo"/></label>
                   <div className="button-section">
                     <input type="submit" name="Upload" value="Upload Photo"/>
                   </div>
