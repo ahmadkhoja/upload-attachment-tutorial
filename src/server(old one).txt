@@ -51,9 +51,26 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   //MULTER CONFIG: [object File],to get file photos to temp server storage
+  // .get('/', (req, res) => res.send({images:images_array}))
   .get('/images', (req, res) => res.send({images:images_array}))
   .post('/upload', multerConfig, (req, res) => {
+      // res.write('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>')
+      // res.send(images_array)
       res.redirect('/')
+      // res.set({
+      //   'Content-Type': 'application/json',
+      // })
+      // res.writeHead(200, 
+      //   {
+      //   'Content-Type': 'application/json' 
+      //   });
+      // res.json([{
+      //   "images": images_array,
+      // }]);
+      // res.redirect('/')
+      // res.redirect(200, '/');      
+      // res.redirect('http://localhost:3000')
+      // res.send('Complete! Check out your public/photo-storage folder.  Please note that files not encoded with an image mimetype are rejected. <a href="http://localhost:3000">try again</a>'+'<br/>'+{images:images_array});
   })
   .use(bodyParser.urlencoded({extended:false}))
   .use(bodyParser.json())
