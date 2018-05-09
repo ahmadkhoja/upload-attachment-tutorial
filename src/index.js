@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
     // 	music: 'data/music',
     // 	document: 'data/document'
     // },
-    uploadDir: 'data',							// simple directory
+    uploadDir: 'public/images',							// simple directory
     accepts: ['audio/mpeg', 'audio/mp3', 'image/png', 'image/jpg', 'image/jpeg'],		// chrome and some of browsers checking mp3 as 'audio/mp3', not 'audio/mpeg'
     maxFileSize: 4194304, 						// 4 MB. default is undefined(no limit)
     chunkSize: 10240,							// default is 10240(1KB)
